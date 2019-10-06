@@ -45,28 +45,3 @@ copy "%LATEST_SDK_PATH%\platform\middleware\glib\bmp_conf.h" 					"lcd-graphics"
 copy "%LATEST_SDK_PATH%\platform\middleware\glib\em_types.h" 					"lcd-graphics"
 
 copy %LATEST_SDK_PATH%\platform\emdrv\gpiointerrupt\src\gpiointerrupt.c" ""
-
-
-:: Add additional include paths to .cproject file
-:: TBD - https://jira.silabs.com/browse/IOTPA_BT-573
-SET cp_loc=./
-SET line=`cat ${cp_loc}/.cproject | grep -n }} | cut -d : -f 1 | awk 'NR==1{print}'`
-
-echo "${line#*/}"
-
-sed "${line}a <listOptionValue builtIn=\"false\" value=\"&quot;\${workspace_loc:/\${ProjName}/lcd-graphics}&quot;\"/>" -i ${cp_loc}/.cproject
-
-SET line=`cat ${cp_loc}/.cproject | grep -n }} | cut -d : -f 1 | awk 'NR==2{print}'`
-
-echo "${line#*/}"
-
-sed "${line}a <listOptionValue builtIn=\"false\" value=\"&quot;\${workspace_loc:/\${ProjName}/lcd-graphics}&quot;\"/>" -i ${cp_loc}/.cproject
-
-
-:: Add any needed defines to project files (e.g. hal-config.h)
-:: TBD - https://jira.silabs.com/browse/IOTPA_BT-573
-SET halc_loc=./
-SET nu=`cat ${halc_loc}/hal-config.h | grep -n include | wc -l`
-SET add_l=`cat ${halc_loc}/hal-config.h | grep -n include | cut -c 1-2 | awk "NR==${nu}{print}"`
-SET add_l=$(expr $add_l + 1)
-sed "${add_l}a \#define\ HAL_SPIDISPLAY_FREQUENCY\ \(1000000\)" -i ${halc_loc}/hal-config.h
